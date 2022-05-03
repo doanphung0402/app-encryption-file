@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegActivity"
+
+    >
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="344dp"
+        android:layout_height="84dp"
+        app:layout_constraintBottom_toTopOf="@id/email_reg"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/register" />
+
+    <EditText
+        android:id="@+id/email_reg"
+        android:layout_width="255dp"
+        android:hint="Nhập email của bạn"
+        android:layout_height="52dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img"
+        app:layout_constraintBottom_toTopOf="@id/password_reg"
+        tools:layout_editor_absoluteX="73dp"
+        tools:layout_editor_absoluteY="177dp" />
+
+    <EditText
+        android:id="@+id/password_reg"
+        android:layout_width="255dp"
+        android:layout_height="52dp"
+        android:ems="10"
+        android:hint="Nhập password "
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@id/password_repeat"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/email_reg" />
+
+
+    <EditText
+        android:id="@+id/password_repeat"
+        android:layout_width="255dp"
+        android:layout_height="52dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@id/btn_reg"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:hint="Nhập lại password"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/password_reg" />
+
+    <Button
+        android:id="@+id/btn_reg"
+        android:layout_width="179dp"
+        android:layout_height="48dp"
+        android:backgroundTint="@color/bg_screen3"
+        android:text="Đăng kí ngay "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/password_repeat"
+        android:onClick="onRegisNow"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
