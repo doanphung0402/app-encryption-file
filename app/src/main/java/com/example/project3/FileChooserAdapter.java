@@ -72,10 +72,12 @@ public class FileChooserAdapter extends BaseAdapter {
         convertView = inflater.inflate(layout,null);
         ImageView img_icon_file = (ImageView) convertView.findViewById(R.id.img_icon_file);
         TextView textview_filename = (TextView) convertView.findViewById(R.id.textview_filename);
+        TextView textview_uri = convertView.findViewById(R.id.textview_uri);
 
         //gan gia tri
          textview_filename.setText(listFileInfo.get(position).getNameFile());
          img_icon_file.setImageResource(listFileInfo.get(position).getIconFile());
+         textview_uri.setText(listFileInfo.get(position).getUrlFile());
          return convertView ;
     }
 }

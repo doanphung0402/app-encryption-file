@@ -1,5 +1,6 @@
 package com.example.project3;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,19 +12,33 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.provider.OpenableColumns;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class HomeActivity extends AppCompatActivity {
+    ImageView imgview = (ImageView) findViewById(R.id.img_openfile);
 
-   @Override
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (imgview.getVisibility() == View.VISIBLE) {
+            outState.putBoolean("reply_visible", true);
+
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
@@ -36,17 +51,27 @@ public class HomeActivity extends AppCompatActivity {
                 .filter(f -> f.contains("."))
                 .map(f -> f.substring(filename.lastIndexOf(".") + 1));
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
+
     public void  onActivityResult(int requestcode, int resultCode, Intent data){
         ListView lv = (ListView) findViewById(R.id.list_view_file);
-        ArrayList<FileChooserInfo> listFile = null;
+        ArrayList<FileChooserInfo> listFile ;
+        ArrayList<String> fileChooser = new ArrayList<>();
         FileChooserAdapter fileChooserAdapter ;
         Context context = getApplicationContext();
         super.onActivityResult(requestcode,resultCode,data);
          if(requestcode == requestcode && resultCode == Activity.RESULT_OK){
               if(data == null){
                    return ;
+
               }
+             if(null != data.getClipData()){
+                 for (int i =0 ; i<data.getClipData().getItemCount(); i++){
+                     Uri uri = data.getClipData().getItemAt(i).getUri();
+                     fileChooser.add(uri.getPath());
+                 }
+             }
               Uri uri = data.getData();
               String nameFile =getFileName(uri,getApplicationContext());
               String urlFile = uri.getPath();
@@ -62,7 +87,8 @@ public class HomeActivity extends AppCompatActivity {
                      break;
                  case "mp4" :
                      nameImg = R.drawable.mp4_image ;break;
-
+                 case "jpg" :
+                     nameImg = R.drawable.jpg_image ;break;
                  case "mp3" :
                      nameImg = R.drawable.mp3_icon ;
                      break;
@@ -74,10 +100,11 @@ public class HomeActivity extends AppCompatActivity {
                      nameImg = R.drawable.unknown_image ;
              }
               System.out.println("name file "+ nameFile+",extention file : "+extentionFile);
-//              listFile.add(new FileChooserInfo(nameFile,urlFile,nameImg));
-//              fileChooserAdapter = new FileChooserAdapter(this,R.layout.file_chooser_info_item_activity,listFile);
-//              lv.setAdapter(fileChooserAdapter);
-//
+              listFile =new ArrayList<>();
+              listFile.add(new FileChooserInfo(nameFile,urlFile,nameImg));
+              fileChooserAdapter = new FileChooserAdapter(this,R.layout.file_chooser_info_item_activity,listFile);
+              lv.setAdapter(fileChooserAdapter);
+
               Toast.makeText(context, uri.getPath(), Toast.LENGTH_SHORT).show();
 
          }
@@ -85,8 +112,12 @@ public class HomeActivity extends AppCompatActivity {
     public void openFileChooser(View view){
          Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
          intent.setType(("*/*"));
+         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
          startActivityForResult(intent,requestcode);
     }
+
+
+
     @SuppressLint("Range")
     public String getFileName(Uri uri , Context context){
          String res = null ;
@@ -112,5 +143,9 @@ public class HomeActivity extends AppCompatActivity {
 
                  return res;
     }
+
+    public
+
+
 
 }
