@@ -17,7 +17,9 @@
             android:layout_height="190dp"
             android:layout_margin="10dp"
             android:foreground="?android:attr/selectableItemBackground"
-            android:clickable="true">
+            android:clickable="true"
+            android:id="@+id/encode_file"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -92,7 +94,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-     </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -180,52 +182,52 @@
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:clipToPadding="false"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-        <androidx.cardview.widget.CardView
-            android:layout_width="310dp"
-            android:layout_height="190dp"
-            android:layout_margin="10dp"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:clickable="true">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
-                <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:background="@drawable/cerclebackgroundorange"
-                    android:src="@drawable/ic_baseline_folder_24"
-                    android:padding="10dp"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:layout_marginTop="10dp"
-                    android:text="Mã hóa file"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/black"
-                    android:layout_margin="10dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Giữ an toàn cho file"
-                    android:padding="5dp"
-                    android:textColor="@color/colorAccent"/>
+<!--    <LinearLayout-->
+<!--        android:orientation="horizontal"-->
+<!--        android:gravity="center"-->
+<!--        android:clipToPadding="false"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content" >-->
+<!--        <androidx.cardview.widget.CardView-->
+<!--            android:layout_width="310dp"-->
+<!--            android:layout_height="190dp"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:foreground="?android:attr/selectableItemBackground"-->
+<!--            android:clickable="true">-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:orientation="vertical"-->
+<!--                android:gravity="center">-->
+<!--                <ImageView-->
+<!--                    android:layout_width="64dp"-->
+<!--                    android:layout_height="64dp"-->
+<!--                    android:background="@drawable/cerclebackgroundorange"-->
+<!--                    android:src="@drawable/ic_baseline_folder_24"-->
+<!--                    android:padding="10dp"-->
+<!--                    />-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:text="Mã hóa file"/>-->
+<!--                <View-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="1dp"-->
+<!--                    android:background="@color/black"-->
+<!--                    android:layout_margin="10dp"/>-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="Giữ an toàn cho file"-->
+<!--                    android:padding="5dp"-->
+<!--                    android:textColor="@color/colorAccent"/>-->
 
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-    </LinearLayout>
+<!--            </LinearLayout>-->
+<!--        </androidx.cardview.widget.CardView>-->
+<!--    </LinearLayout>-->
 
 
 </LinearLayout>

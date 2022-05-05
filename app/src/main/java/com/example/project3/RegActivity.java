@@ -2,7 +2,6 @@ package com.example.project3;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dustinredmond.BCrypt;
@@ -80,7 +78,7 @@ public class RegActivity extends AppCompatActivity {
             contentValues.put("email",email);
             contentValues.put("password",passwordEncode);
             sqLiteDatabase.insert("user_account",null,contentValues);
-            Intent intent = new Intent(this,HomeActivity.class);
+            Intent intent = new Intent(this, EncryptFileActivity.class);
             startActivity(intent);
             Toast.makeText(this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();
         }

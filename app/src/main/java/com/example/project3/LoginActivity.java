@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
                     String passEncode = cursor.getString(1).toString();
                     System.out.println("pass:"+passEncode);
                     if(isValid(password,passEncode) == true){
-                        Intent intent = new Intent(this,HomeActivity.class);
+                        Intent intent = new Intent(this, ContainerActivity.class);
                         startActivity(intent);
                         Toast.makeText(this, "welcome friend ! ", Toast.LENGTH_SHORT).show();
                     }else {

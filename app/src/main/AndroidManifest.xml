@@ -10,7 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Project3">
         <activity
+            android:name=".ContainerActivity"
+            android:exported="true" />
+        <activity
             android:name=".HomeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".EncryptFileActivity"
             android:exported="true" />
         <activity
             android:name=".RegActivity"
