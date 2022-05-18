@@ -2,6 +2,10 @@ package com.example.project3;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +13,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -64,6 +71,7 @@ public class FileChooserAdapter extends BaseAdapter {
         return 0;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -74,7 +82,9 @@ public class FileChooserAdapter extends BaseAdapter {
         TextView textview_filename = (TextView) convertView.findViewById(R.id.textview_filename);
         TextView textview_uri = convertView.findViewById(R.id.textview_uri);
 
+
         //gan gia tri
+
          textview_filename.setText(listFileInfo.get(position).getNameFile());
          img_icon_file.setImageResource(listFileInfo.get(position).getIconFile());
          textview_uri.setText(listFileInfo.get(position).getUrlFile());
