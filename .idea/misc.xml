@@ -8,19 +8,24 @@
         <entry key="..\:/Project3/app/src/main/res/drawable/cerclebackgroundorange.xml" value="0.2203125" />
         <entry key="..\:/Project3/app/src/main/res/drawable/cerclebackgroundpink.xml" value="0.15" />
         <entry key="..\:/Project3/app/src/main/res/drawable/cerclebackgroundpurple.xml" value="0.15" />
+        <entry key="..\:/Project3/app/src/main/res/drawable/cerclebackgroundwhite.xml" value="0.140625" />
         <entry key="..\:/Project3/app/src/main/res/drawable/cerclebackgroundyellow.xml" value="0.15" />
+        <entry key="..\:/Project3/app/src/main/res/drawable/ic_baseline_exit_to_app_24.xml" value="0.140625" />
+        <entry key="..\:/Project3/app/src/main/res/drawable/ic_baseline_folder_24.xml" value="0.140625" />
         <entry key="..\:/Project3/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.2203125" />
         <entry key="..\:/Project3/app/src/main/res/drawable/ic_baseline_insert_drive_file_24.xml" value="0.16666666666666666" />
+        <entry key="..\:/Project3/app/src/main/res/drawable/ic_baseline_login_24.xml" value="0.140625" />
         <entry key="..\:/Project3/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.2203125" />
         <entry key="..\:/Project3/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.2203125" />
         <entry key="..\:/Project3/app/src/main/res/drawable/ic_launcher_background.xml" value="0.15462962962962962" />
         <entry key="..\:/Project3/app/src/main/res/drawable/ic_pdf_background.xml" value="0.15462962962962962" />
-        <entry key="..\:/Project3/app/src/main/res/layout/activity_container.xml" value="0.33" />
-        <entry key="..\:/Project3/app/src/main/res/layout/activity_encrypt.xml" value="0.20416666666666666" />
+        <entry key="..\:/Project3/app/src/main/res/layout/activity_container.xml" value="0.18" />
+        <entry key="..\:/Project3/app/src/main/res/layout/activity_encrypt.xml" value="0.16" />
         <entry key="..\:/Project3/app/src/main/res/layout/activity_home.xml" value="0.1" />
         <entry key="..\:/Project3/app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="..\:/Project3/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Project3/app/src/main/res/layout/activity_reg.xml" value="0.25" />
+        <entry key="..\:/Project3/app/src/main/res/layout/activity_test.xml" value="0.18" />
         <entry key="..\:/Project3/app/src/main/res/layout/file_chooser_info_item.xml" value="0.20416666666666666" />
         <entry key="..\:/Project3/app/src/main/res/layout/file_chooser_info_item_activity.xml" value="0.44139650872817954" />
         <entry key="..\:/Project3/app/src/main/res/layout/fragment_home.xml" value="0.20416666666666666" />

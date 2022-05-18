@@ -18,9 +18,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,7 +33,14 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
-   
+        CardView logout_app = (CardView) view.findViewById(R.id.logout);
+        logout_app.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(),MainActivity.class);
+                startActivity(intent);
+            }
+        });
         // Inflate the layout for this fragment
 //        return inflater.inflate(R.layout.fragment_home, container, false);
         return view ;

@@ -5,26 +5,72 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
+
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class EncryptFileActivity extends AppCompatActivity {
-
+    ArrayList<FileChooserInfo> listFile =new ArrayList<>() ;
+    ArrayList<Uri> fileChooser = new ArrayList<>();
+    Context context ;
+    ListView listView ;
+    FileChooserAdapter fileChooserAdapter ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_encrypt);
+        listView =(ListView) findViewById(R.id.list_view_file);
+        Button btn_continue = (Button) findViewById(R.id.continue_btn_encrypt);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+                AlertDialog.Builder dialog  = new AlertDialog.Builder(EncryptFileActivity.this);
+                dialog.setTitle("Xác nhận ");
+                dialog.setMessage("Bạn có đồng ý xóa không ? ");
+                dialog.setPositiveButton("Đồng ý ", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        listFile.remove(position);
+                        fileChooserAdapter.notifyDataSetChanged();
+                    }
+                });
+                dialog.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                AlertDialog alertDialog = dialog.create();
+                alertDialog.show();
+                return false;
+            }
+        });
+    }
+    @Override
+    public void onContentChanged() {
+        super.onContentChanged();
 
+        View empty = findViewById(R.id.empty);
+        ListView list = (ListView) findViewById(R.id.list_view_file);
+        list.setEmptyView(empty);
     }
     int requestcode = 1;
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -38,10 +84,7 @@ public class EncryptFileActivity extends AppCompatActivity {
 
     public void  onActivityResult(int requestcode, int resultCode, Intent data){
         ListView lv = (ListView) findViewById(R.id.list_view_file);
-        ArrayList<FileChooserInfo> listFile ;
-        ArrayList<Uri> fileChooser = new ArrayList<>();
-        FileChooserAdapter fileChooserAdapter ;
-        Context context = getApplicationContext();
+
         super.onActivityResult(requestcode,resultCode,data);
          if(requestcode == requestcode && resultCode == Activity.RESULT_OK){
               if(data == null){
@@ -59,7 +102,7 @@ public class EncryptFileActivity extends AppCompatActivity {
                   fileChooser.add(uri);
              }
 
-                listFile =new ArrayList<>();
+
                 for(Uri urlFile : fileChooser){
                      String nameFile = getFileName(urlFile,getApplicationContext());
                      String pathFile = urlFile.getPath();
@@ -110,7 +153,7 @@ public class EncryptFileActivity extends AppCompatActivity {
             int nameImg ;
              switch(extentionFile) {
                  case "pdf":
-                     nameImg = R.drawable.dpf_image ;
+                     nameImg = R.drawable.pdf_image;
                      break;
                  case "docx" :
                      nameImg = R.drawable.word_image ;
@@ -125,7 +168,12 @@ public class EncryptFileActivity extends AppCompatActivity {
                  case "txt" :
                      nameImg = R.drawable.text_image ;
                      break;
-
+                 case "rar" :
+                     nameImg = R.drawable.rar_icon ;
+                     break;
+                 case "pptx" :
+                     nameImg = R.drawable.pptx_image ;
+                     break;
                  default:
                      nameImg = R.drawable.unknown_image ;
              }
@@ -133,5 +181,23 @@ public class EncryptFileActivity extends AppCompatActivity {
         return nameImg;
 
     }
+    public void encriptFile(View view){
+        int size = listFile.size();
+//        Toast.makeText(this,"hello"+size, Toast.LENGTH_SHORT).show();
+        List<Uri> uriFileErrorExcute = new ArrayList<>();
+        Uri uriFile = fileChooser.get(0);
+        File originFile = new File(String.valueOf(getExternalFilesDir(String.valueOf(uriFile))));
+//        Log.i("file url", String.valueOf());
+
+        if (originFile.exists()==true){
+            Toast.makeText(this, "ok"+fileChooser.size(), Toast.LENGTH_SHORT).show();
+        }else{
+            uriFileErrorExcute.add(uriFile);
+            Toast.makeText(this, "no"+fileChooser.size(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
 
 }

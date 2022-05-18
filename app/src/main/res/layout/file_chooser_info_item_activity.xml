@@ -14,7 +14,7 @@
         app:layout_constraintRight_toLeftOf="@id/textview_filename"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.11"
-        app:srcCompat="@drawable/dpf_image" />
+        app:srcCompat="@drawable/pdf_image" />
 
     <TextView
         android:id="@+id/textview_filename"

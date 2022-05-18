@@ -68,7 +68,7 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:background="@drawable/cerclebackgroundgreen"
+                    android:background="@drawable/cerclebackgroundpink"
                     android:src="@drawable/ic_baseline_folder_24"
                     android:padding="10dp"
                     />
@@ -144,6 +144,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="160dp"
             android:layout_height="190dp"
+            android:id="@+id/logout"
             android:layout_margin="10dp"
             android:foreground="?android:attr/selectableItemBackground"
             android:clickable="true">
@@ -155,8 +156,8 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:background="@drawable/cerclebackgroundyellow"
-                    android:src="@drawable/ic_baseline_folder_24"
+                    android:background="@drawable/cerclebackgroundwhite"
+                    android:src="@drawable/ic_baseline_login_24"
                     android:padding="10dp"
                     />
                 <TextView
@@ -164,19 +165,19 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:layout_marginTop="10dp"
-                    android:text="Mã hóa file"/>
+                    android:text="Đăng xuất"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/black"
                     android:layout_margin="10dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Giữ an toàn cho file"
-                    android:padding="5dp"
-                    android:textColor="@color/colorAccent"/>
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="Giữ an toàn cho file"-->
+<!--                    android:padding="5dp"-->
+<!--                    android:textColor="@color/colorAccent"/>-->
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
