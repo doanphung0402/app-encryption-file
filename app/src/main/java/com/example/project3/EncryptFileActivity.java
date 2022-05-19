@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +24,10 @@ import android.widget.Toast;
 
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -100,6 +105,7 @@ public class EncryptFileActivity extends AppCompatActivity {
              }else{
                   Uri uri = data.getData();
                   fileChooser.add(uri);
+                 
              }
 
 
@@ -110,7 +116,7 @@ public class EncryptFileActivity extends AppCompatActivity {
                      int iconFile = getImageIconFile(extentionFile);
                      listFile.add(new FileChooserInfo(nameFile,pathFile,iconFile));
                 }
-
+             fileChooser.clear();
               fileChooserAdapter = new FileChooserAdapter(this,R.layout.file_chooser_info_item_activity,listFile);
               lv.setAdapter(fileChooserAdapter);
          } //end if onActiivity
@@ -185,15 +191,34 @@ public class EncryptFileActivity extends AppCompatActivity {
         int size = listFile.size();
 //        Toast.makeText(this,"hello"+size, Toast.LENGTH_SHORT).show();
         List<Uri> uriFileErrorExcute = new ArrayList<>();
-        Uri uriFile = fileChooser.get(0);
-        File originFile = new File(String.valueOf(getExternalFilesDir(String.valueOf(uriFile))));
-//        Log.i("file url", String.valueOf());
-
+        Uri uriFile = Uri.parse(listFile.get(0).getUrlFile());
+        Log.i("size uri list : ", String.valueOf(listFile.size()));
+        File originFile = new File(String.valueOf(getExternalFilesDir());
+        Log.i("uri file origin  ",originFile.getPath());
+        Log.i("uri file: ", String.valueOf(uriFile));
         if (originFile.exists()==true){
-            Toast.makeText(this, "ok"+fileChooser.size(), Toast.LENGTH_SHORT).show();
+            ParcelFileDescriptor pfd;
+            try {
+                pfd =getContentResolver().openFileDescriptor(Uri.parse(uriFile.getPath()), "r");
+                FileInputStream fileInputStream =
+                        new FileInputStream(pfd.getFileDescriptor());
+                FileOutputStream fileOutputStream = new FileOutputStream(originFile);
+
+               byte[] bufferInputFile =new byte[64];
+               while(fileInputStream.read(bufferInputFile)!=-1){
+                    fileOutputStream.write(bufferInputFile);
+               }
+
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }else{
             uriFileErrorExcute.add(uriFile);
-            Toast.makeText(this, "no"+fileChooser.size(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "no", Toast.LENGTH_SHORT).show();
         }
     }
 
