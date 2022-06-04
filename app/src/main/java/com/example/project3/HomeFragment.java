@@ -25,7 +25,15 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home,
                 container, false);
 
+        CardView decode_file = (CardView) view.findViewById(R.id.decode_file);
         CardView encode_file = (CardView) view.findViewById(R.id.encode_file);
+        decode_file.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext() , DecryptActivity.class);
+                startActivity(intent);
+            }
+        });
         encode_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

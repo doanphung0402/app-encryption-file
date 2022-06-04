@@ -3,9 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Project3/app/src/main/res/layout/activity_decrypt.xml" value="0.18" />
         <entry key="..\:/Project3/app/src/main/res/layout/activity_encrypt.xml" value="0.11458333333333333" />
+        <entry key="..\:/Project3/app/src/main/res/layout/activity_home.xml" value="0.1" />
+        <entry key="..\:/Project3/app/src/main/res/layout/file_chooser_info_item_activity.xml" value="0.25" />
+        <entry key="..\:/Project3/app/src/main/res/layout/file_decrypt_item.xml" value="0.25" />
+        <entry key="..\:/Project3/app/src/main/res/layout/fragment_home.xml" value="0.1" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>

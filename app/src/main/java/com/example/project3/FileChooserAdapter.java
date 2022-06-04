@@ -87,7 +87,7 @@ public class FileChooserAdapter extends BaseAdapter {
 
          textview_filename.setText(listFileInfo.get(position).getNameFile());
          img_icon_file.setImageResource(listFileInfo.get(position).getIconFile());
-         textview_uri.setText(listFileInfo.get(position).getUrlFile());
+         textview_uri.setText(listFileInfo.get(position).getUrlFile().getPath());
          return convertView ;
     }
 }
