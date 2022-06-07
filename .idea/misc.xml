@@ -3,9 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Project3/app/src/main/res/drawable/bg_screen1_corner_dp.xml" value="0.1125" />
+        <entry key="..\:/Project3/app/src/main/res/drawable/bg_screen_corner_10dp.xml" value="0.1125" />
+        <entry key="..\:/Project3/app/src/main/res/drawable/bg_while_corner_16.xml" value="0.1046875" />
+        <entry key="..\:/Project3/app/src/main/res/drawable/bg_white_corner_16.xml" value="0.17592592592592593" />
+        <entry key="..\:/Project3/app/src/main/res/drawable/bg_yellow_corner_16_top_left_top_right.xml" value="0.17592592592592593" />
+        <entry key="..\:/Project3/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.17592592592592593" />
+        <entry key="..\:/Project3/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.17592592592592593" />
+        <entry key="..\:/Project3/app/src/main/res/layout/activity_choose_file_mode.xml" value="0.25" />
         <entry key="..\:/Project3/app/src/main/res/layout/activity_decrypt.xml" value="0.18" />
         <entry key="..\:/Project3/app/src/main/res/layout/activity_encrypt.xml" value="0.11458333333333333" />
         <entry key="..\:/Project3/app/src/main/res/layout/activity_home.xml" value="0.1" />
+        <entry key="..\:/Project3/app/src/main/res/layout/activity_reg.xml" value="0.1" />
         <entry key="..\:/Project3/app/src/main/res/layout/file_chooser_info_item_activity.xml" value="0.25" />
         <entry key="..\:/Project3/app/src/main/res/layout/file_decrypt_item.xml" value="0.25" />
         <entry key="..\:/Project3/app/src/main/res/layout/fragment_home.xml" value="0.1" />

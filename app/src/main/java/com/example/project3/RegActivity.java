@@ -1,20 +1,28 @@
 package com.example.project3;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dustinredmond.BCrypt;
+import com.example.FIleEncryptUtils.AES_BC;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 public class RegActivity extends AppCompatActivity {
     final String DatabaseName = "project3.db";
     SQLiteDatabase sqLiteDatabase ;
@@ -28,6 +36,7 @@ public class RegActivity extends AppCompatActivity {
         return BCrypt.hashpw(pass, BCrypt.gensalt());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void onRegisNow(View view){
         sqLiteDatabase = Database.initDatabase(this,DatabaseName);
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from user_account",null);
@@ -41,12 +50,8 @@ public class RegActivity extends AppCompatActivity {
         String passwordEncode = generateHashedPass(password);
         String repeat_pass = repeat_passworldEt.getText().toString();
 
-        final Pattern VALID_EMAIL_ADDRESS_REGEX =
-                Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
-
         if(email.isEmpty()){
-            Toast.makeText(this, "email không được để trống", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "tên không được để trống", Toast.LENGTH_SHORT).show();
             return ;
         } else if (password.isEmpty()){
             Toast.makeText(this, "password bắt buộc", Toast.LENGTH_SHORT).show();
@@ -56,9 +61,6 @@ public class RegActivity extends AppCompatActivity {
             return ;
         }else if(password.equals(repeat_pass)==false){
             Toast.makeText(this, "Password nhập sai !", Toast.LENGTH_SHORT).show();
-            return ;
-        }else if(matcher.find()==false){
-            Toast.makeText(this, "Email không hợp lệ !", Toast.LENGTH_SHORT).show();
             return ;
         }else if(password.length()<8){
             Toast.makeText(this, "password ít nhất 8 kí tự !", Toast.LENGTH_SHORT).show();
@@ -73,11 +75,15 @@ public class RegActivity extends AppCompatActivity {
                  return ;
              }
         } //end for
+//            AES_BC aes_bc = new AES_BC();
+//            aes_bc.createKey("test");
+//            SecretKey secretKeySpec = aes_bc.getKey("test");
+//            Log.i("secret key ", String.valueOf(secretKeySpec));
 
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("email",email);
-            contentValues.put("password",passwordEncode);
-            sqLiteDatabase.insert("user_account",null,contentValues);
+//            ContentValues contentValues = new ContentValues();
+//            contentValues.put("email",email);
+//            contentValues.put("password",passwordEncode);
+//            sqLiteDatabase.insert("user_account",null,contentValues);
             Intent intent = new Intent(this, EncryptFileActivity.class);
             startActivity(intent);
             Toast.makeText(this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();

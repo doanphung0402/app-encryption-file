@@ -44,7 +44,6 @@ import java.util.Enumeration;
 
 
 public class AES_BC {
-    public static final String KEY_NAME = "my_key";
     private static final int AUTHENTICATION_DURATION_SECONDS = 30;
     public AES_BC() {
 
@@ -70,14 +69,15 @@ public class AES_BC {
     try {
         KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
         keyStore.load(null);
+
         KeyGenerator keyGenerator = KeyGenerator.getInstance(
                 KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
         keyGenerator.init(new KeyGenParameterSpec.Builder(alias,
                 KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
                 .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
                 .setKeySize(256)
-                .setUserAuthenticationRequired(false)
-                 .setRandomizedEncryptionRequired(true)
+                .setUserAuthenticationRequired(true)
+                .setRandomizedEncryptionRequired(true)
                 .setUserAuthenticationValidityDurationSeconds(AUTHENTICATION_DURATION_SECONDS)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
                 .build());

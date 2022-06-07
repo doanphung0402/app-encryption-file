@@ -10,6 +10,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -17,6 +18,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,10 +29,14 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 
@@ -38,6 +45,7 @@ import com.example.FIleEncryptUtils.KeyStoreUtils;
 import com.example.FIleEncryptUtils.MAC_BC;
 import com.example.FIleEncryptUtils.Utils_BC;
 import com.example.project3.UtilsEncypt.EncryptFile;
+import com.obsez.android.lib.filechooser.ChooserDialog;
 
 
 import java.io.File;
@@ -58,12 +66,6 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 public class EncryptFileActivity extends AppCompatActivity {
     ArrayList<FileChooserInfo> listFile = new ArrayList<>();
@@ -80,6 +82,21 @@ public class EncryptFileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_encrypt);
         listView = (ListView) findViewById(R.id.list_view_file);
         Button btn_continue = (Button) findViewById(R.id.continue_btn_encrypt);
+        if(listFile.isEmpty()){
+             btn_continue.setEnabled(false);
+        }
+        Button btn_chooser_file = (Button) findViewById(R.id.btn_choose_file);
+
+        btn_chooser_file.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                 Log.i("encrypt file","encypt file");
+                 openDialogChooserFileMode();
+
+            }
+        });
+
+
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -155,14 +172,67 @@ public class EncryptFileActivity extends AppCompatActivity {
             lv.setAdapter(fileChooserAdapter);
         } //end if onActiivity
     }
+    private void openDialogChooserFileMode(){
+        final Dialog dialog = new Dialog(this) ;
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.activity_choose_file_mode);
 
-    public void openFileChooser(View view) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType(("*/*"));
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        startActivityForResult(intent, requestcode);
+        Window window = dialog.getWindow();
+        if(window==null){
+            return ;
+        }
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        WindowManager.LayoutParams windownAtt = window.getAttributes();
+        windownAtt.gravity = Gravity.CENTER;
+        window.setAttributes(windownAtt);
+        dialog.show();
+
+        Button btn_cancer_dialog = dialog.findViewById(R.id.btn_cancer_dialog);
+        Button btn_continue_dialog = dialog.findViewById(R.id.btn_continue_dialog);
+
+        RadioButton r_a = dialog.findViewById(R.id.radio_a);  // ma hoa file
+        RadioButton r_b = dialog.findViewById(R.id.radio_b);
+
+
+
+         btn_cancer_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("cancer btn","huy");
+                dialog.dismiss();
+            }
+        });
+
+         btn_continue_dialog.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 dialog.dismiss();
+                 if(r_a.isChecked()){
+                     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                     intent.setType(("*/*"));
+                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                     startActivityForResult(intent, requestcode);
+                 }else{
+                     new ChooserDialog(EncryptFileActivity.this)
+                             .withFilter(true, false)
+                             .withStartFile(Environment.getExternalStorageDirectory().getPath())
+                             // to handle the result(s)
+                             .withChosenListener(new ChooserDialog.Result() {
+                                 @Override
+                                 public void onChoosePath(String path, File pathFile) {
+                                     File[] listFile = pathFile.listFiles();
+                                     for(int k = 0; k<listFile.length ; k++){
+                                          fileChooser.add(Uri.parse(listFile[k].getPath()));
+                                     }
+                                 }
+                             })
+                             .build()
+                             .show();
+                 }
+             }
+         });
     }
-
 
     private void checkAndRequestPermissions() {
         String[] permissions = new String[]{
@@ -253,64 +323,6 @@ public class EncryptFileActivity extends AppCompatActivity {
            finish();
            startActivity(getIntent());
            Log.i("encrypt","EncryptFileActivity done!");
-//        File file = new File(EXTERNAL_PATH+"/DCIM/Camera/20220526_160441.jpg");
-//        if(file.exists()){
-//             boolean st = file.delete();
-//             Log.i("status delete", String.valueOf(st));
-//
-//        }else{
-//             Log.i("delete","error");
-//        }
-//        try {
-//                   AES_BC aes_bc = new AES_BC() ;
-//                   String EXTERNAL_PATH = Environment.getExternalStorageDirectory().getPath();
-//                   String INTERNAL_PATH = Environment.getDataDirectory().getPath();
-//
-//                   aes_bc.createKey("key");
-//                   SecretKey secretKey = aes_bc.getKey("key");
-//                   if(secretKey==null){
-//                       Log.i("null","null");
-//                   }
-//                   MAC_BC mac_bc = new MAC_BC();
-//                   String pathfile = EXTERNAL_PATH +"/Android/data/com.example.project3" ;
-//                   File fileInput = new File(pathfile+"/folder.intermediate/file.jpg");
-//                   File outPut = new File(pathfile+"/folder.intermediate/file.encrypt");
-//                   File outDecryptFile = new File(pathfile +"/folder.intermediate/file1.jpg");
-//                   File macFile = new File(pathfile +"/folder.intermediate/macFile.mac");
-//                   outPut.createNewFile();
-//                   outDecryptFile.createNewFile();
-//                   macFile.createNewFile();
-//                   File fileTotal = new File(pathfile+"/file_encript/file.total");
-//                   File fileOriginDec =  new File(pathfile+"/file_encript/fileOrigin.jpg");
-//                   File fileOriginEnc =  new File(pathfile+"/file_encript/fileOrigin.encr");
-//                   fileTotal.createNewFile();
-//                   fileOriginDec.createNewFile();
-//                   fileOriginEnc.createNewFile();
-//                   byte[] iv = aes_bc.encriptFile(secretKey,fileInput,outPut);
-//                   aes_bc.decryptFile(secretKey,iv,outPut,outDecryptFile);
-//                   mac_bc.encryptFileWithHmac(secretKey,outPut,macFile);
-//                   Utils_BC utils_bc = new Utils_BC(1024);
-//                   utils_bc.createFileProtected(outPut,macFile,iv,fileTotal);
-//                   Log.i("done","Done1");
-//                   boolean flag=  utils_bc.encrypfileFromFileProtected(fileTotal,fileOriginEnc,fileOriginDec);
-//                   Log.i("flag", String.valueOf(flag));
-//                   Log.i("done","Done");
-////            fileOriginEnc.delete();
-////            fileTotal.delete();
-//
-//               }catch(IOException e){
-//                   Log.i("error ioe",e.getMessage());
-//               }catch(NoSuchAlgorithmException e){
-//                   Log.i("error",e.getMessage());
-//               }
-//               catch(InvalidKeyException e){
-//                   Log.i("error",e.getMessage());
-//               }
-//               catch(NoSuchProviderException e){
-//                   Log.i("error",e.getMessage());
-//               } catch (GeneralSecurityException e) {
-//                   e.printStackTrace();
-//               }
         }
     }
 

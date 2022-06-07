@@ -98,7 +98,6 @@ public class FileChooserADDecrypt extends BaseAdapter {
         convertView = inflater.inflate(layout,null);
         Log.v("ConvertView", String.valueOf(position));
         CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.checkbox_meat);
-
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

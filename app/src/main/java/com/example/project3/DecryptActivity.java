@@ -259,7 +259,6 @@ public class DecryptActivity extends AppCompatActivity {
     };
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void decriptFile(View view)  {
-        Toast.makeText(this,"decrypt file",Toast.LENGTH_LONG);
         String EXTERNAL_PATH = Environment.getExternalStorageDirectory().getPath();
         Log.i("size list", String.valueOf(listFile.size()));
         ArrayList<FileChooserInfo> listFileDecrypt = new ArrayList<>();

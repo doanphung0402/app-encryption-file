@@ -99,7 +99,7 @@ public class DecryptFile {
                         break;
                     }
 
-                    String key = "KS_" + fileNameOrigin;
+                    String key = "project3_key";
 
                     SecretKey secretKey = aes_bc.getKey(key);
                     Log.i("key decrypt", secretKey.toString());

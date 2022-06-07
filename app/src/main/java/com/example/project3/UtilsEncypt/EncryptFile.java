@@ -98,7 +98,7 @@ public class EncryptFile {
                         Log.i("file created", "file encrypt intermediate created !");
                         encrypCBCFile.createNewFile();
                     }
-                    String key = "KS_" + fileNameOrigin;
+                    String key = "project3_key";
                     aes_bc.createKey(key);
                     SecretKey secretKey = aes_bc.getKey(key);
                     if (secretKey == null) {
