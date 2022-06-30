@@ -15,7 +15,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@id/password"
-        android:hint="email"
+        android:hint="Tên đăng nhập"
         android:inputType="textEmailAddress"
         tools:layout_editor_absoluteX="63dp"
         tools:layout_editor_absoluteY="224dp" />
@@ -30,7 +30,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btn_login_activity"
-        android:inputType="textPassword"
+        android:inputType="numberPassword"
         tools:layout_editor_absoluteX="63dp"
         tools:layout_editor_absoluteY="382dp"
         />

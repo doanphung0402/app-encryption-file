@@ -45,8 +45,11 @@ import java.util.Enumeration;
 
 public class AES_BC {
     private static final int AUTHENTICATION_DURATION_SECONDS = 30;
+    private int sizeBlock ;
+    public AES_BC(int sizeBlock) {
+        this.sizeBlock = sizeBlock ;
+    }
     public AES_BC() {
-
     }
 
     public byte[] createSalt(int seedByte) {
@@ -76,7 +79,7 @@ public class AES_BC {
                 KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
                 .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
                 .setKeySize(256)
-                .setUserAuthenticationRequired(true)
+                .setUserAuthenticationRequired(false)
                 .setRandomizedEncryptionRequired(true)
                 .setUserAuthenticationValidityDurationSeconds(AUTHENTICATION_DURATION_SECONDS)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
@@ -113,7 +116,7 @@ public class AES_BC {
         cipher.init(Cipher.ENCRYPT_MODE, key);
         FileInputStream inputStream = new FileInputStream(inputFile);
         FileOutputStream outputStream = new FileOutputStream(outputFile);
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[sizeBlock];
         int bytesRead;
 
         while ((bytesRead = inputStream.read(buffer)) != -1) {
@@ -137,7 +140,7 @@ public class AES_BC {
         cipher.init(Cipher.DECRYPT_MODE, key, ivParameterSpec);
         FileInputStream inputStream = new FileInputStream(encryptedFile);
         FileOutputStream outputStream = new FileOutputStream(OutputFile);
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[sizeBlock];
         int bytesRead;
         while ((bytesRead = inputStream.read(buffer)) != -1) {
             byte[] output = cipher.update(buffer, 0, bytesRead);

@@ -22,7 +22,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 
 public class MAC_BC {
-    public MAC_BC() {
+    private int sizeBlock ;
+    public MAC_BC(int sizeBlock) {
+        this.sizeBlock =sizeBlock ;
     }
 
     @SuppressLint("NewApi")
@@ -35,7 +37,7 @@ public class MAC_BC {
         hmac.init(secretKey);
         FileInputStream inputStream = new FileInputStream(fileHmacInput);
         FileOutputStream outputStream = new FileOutputStream(fileHmacOutput);
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[sizeBlock];
         while ((inputStream.read(buffer)) != -1) {
             hmac.update(buffer);
         }
@@ -48,14 +50,14 @@ public class MAC_BC {
     }
 
     @SuppressLint("NewApi")
-    public boolean checkHmac(byte[] buferHmac, File originFile, SecretKey key ) throws IOException, InvalidKeyException, NoSuchAlgorithmException {
+    public boolean checkHmac(byte[] buferHmac, File originFile, SecretKey key) throws IOException, InvalidKeyException, NoSuchAlgorithmException {
         Mac hmac = Mac.getInstance(KeyProperties.KEY_ALGORITHM_HMAC_SHA512);
         SecretKey secretKey = new SecretKeySpec(key.toString().getBytes(),KeyProperties.KEY_ALGORITHM_HMAC_SHA512);
         hmac.init(secretKey);
         Log.i("secret key decrp mac", secretKey.toString());
 
         FileInputStream inputOriginFile = new FileInputStream(originFile);
-        byte[] buferFile = new byte[1024];
+        byte[] buferFile = new byte[sizeBlock];
         while (inputOriginFile.read(buferFile) != -1) {
             hmac.update(buferFile);
         }

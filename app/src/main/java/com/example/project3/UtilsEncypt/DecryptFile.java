@@ -18,6 +18,8 @@ import com.example.FIleEncryptUtils.Utils_Function;
 import com.example.project3.EncryptFileActivity;
 import com.example.project3.FileChooserInfo;
 import com.example.project3.UriUtils;
+import com.example.project3.Utils.User;
+import com.example.project3.Utils.UserLocalStore;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +41,7 @@ public class DecryptFile {
     public static final String EXTERNAL_PATH = Environment.getExternalStorageDirectory().getPath();
     public ArrayList<FileChooserInfo> listFileDecrypt;
     public Context context;
-
+    UserLocalStore userLocalStore ;
     public DecryptFile(ArrayList<FileChooserInfo> listFile, Context context) {
         this.listFileDecrypt = listFile;
         this.context = context;
@@ -64,7 +66,7 @@ public class DecryptFile {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void decryptFile() {
         Log.i("Decrypt file", String.valueOf(listFileDecrypt.size()));
-        AES_BC aes_bc = new AES_BC();
+
         File fileDecryptFolder = new File(EXTERNAL_PATH, "Project3_File");
         if (!fileDecryptFolder.exists()) {
             fileDecryptFolder.mkdir();
@@ -74,8 +76,8 @@ public class DecryptFile {
             Uri uriFile = listFileDecrypt.get(position).getUrlFile();
             Log.i("uri file ", String.valueOf(uriFile));
             ArrayList<Uri> ErrorUriFile = new ArrayList<>();
-//            File fileOrigin = new File(UriUtils.getPathFromUri(context, uriFile));
             File fileOrigin = new File(String.valueOf(uriFile));
+            AES_BC aes_bc = new AES_BC();
             File fileStepDecrypt = new File(EXTERNAL_PATH + "/Android/data/com.example.project3", "file_step_decrypt.step");
             if (fileOrigin.exists()) {
                 Log.i("uri file ", fileOrigin.getAbsolutePath());
@@ -98,18 +100,18 @@ public class DecryptFile {
                         ErrorUriFile.add(uriFile);
                         break;
                     }
-
-                    String key = "project3_key";
-
+                     userLocalStore =new UserLocalStore(getContext());
+                    String key = userLocalStore.getUser().username+"_KEY";
+                    Log.i("key decrypt", key);
                     SecretKey secretKey = aes_bc.getKey(key);
-                    Log.i("key decrypt", secretKey.toString());
+
                     if (secretKey == null) {
                         Log.i("key", "key not found");
                         ErrorUriFile.add(uriFile);
                         break;
                     }
-                    Utils_BC utils_bc = new Utils_BC(1024);
-                    boolean rsDecryptFile = utils_bc.decrypfileFromFileProtected(fileOrigin, fileStepDecrypt, fileOutDecrypt);
+                    Utils_BC utils_bc = new Utils_BC();
+                    boolean rsDecryptFile = utils_bc.decrypfileFromFileProtected(fileOrigin, fileStepDecrypt, fileOutDecrypt,key);
                     if (rsDecryptFile == false) {
                         ErrorUriFile.add(uriFile);
                         break;

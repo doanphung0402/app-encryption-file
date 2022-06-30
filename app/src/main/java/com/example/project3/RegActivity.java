@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.dustinredmond.BCrypt;
 import com.example.FIleEncryptUtils.AES_BC;
+import com.example.project3.Utils.User;
+import com.example.project3.Utils.UserLocalStore;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,10 +28,12 @@ import javax.crypto.spec.SecretKeySpec;
 public class RegActivity extends AppCompatActivity {
     final String DatabaseName = "project3.db";
     SQLiteDatabase sqLiteDatabase ;
+    UserLocalStore userLocalStore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reg);
+        userLocalStore = new UserLocalStore(this);
     }
     private String generateHashedPass(String pass) {
         // hash a plaintext password using the typical log rounds (10)
@@ -62,8 +66,8 @@ public class RegActivity extends AppCompatActivity {
         }else if(password.equals(repeat_pass)==false){
             Toast.makeText(this, "Password nhập sai !", Toast.LENGTH_SHORT).show();
             return ;
-        }else if(password.length()<8){
-            Toast.makeText(this, "password ít nhất 8 kí tự !", Toast.LENGTH_SHORT).show();
+        }else if(password.length()<6){
+            Toast.makeText(this, "password tối thiểu 6 kí tự !", Toast.LENGTH_SHORT).show();
             return ;
         }
 
@@ -79,11 +83,13 @@ public class RegActivity extends AppCompatActivity {
 //            aes_bc.createKey("test");
 //            SecretKey secretKeySpec = aes_bc.getKey("test");
 //            Log.i("secret key ", String.valueOf(secretKeySpec));
-
-//            ContentValues contentValues = new ContentValues();
-//            contentValues.put("email",email);
-//            contentValues.put("password",passwordEncode);
-//            sqLiteDatabase.insert("user_account",null,contentValues);
+        User user = new User(email,passwordEncode);
+        UserLocalStore userLocalStore = new UserLocalStore(this);
+        userLocalStore.storeUserData(user);
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("email",email);
+            contentValues.put("password",passwordEncode);
+            sqLiteDatabase.insert("user_account",null,contentValues);
             Intent intent = new Intent(this, EncryptFileActivity.class);
             startActivity(intent);
             Toast.makeText(this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();

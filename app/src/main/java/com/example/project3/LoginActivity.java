@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dustinredmond.BCrypt;
+import com.example.project3.Utils.User;
+import com.example.project3.Utils.UserLocalStore;
 
 public class LoginActivity extends AppCompatActivity {
     final String DatabaseName = "project3.db";
@@ -28,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginPage(View view) {
+        UserLocalStore userLocalStore  =new UserLocalStore(this);
         try {
             EditText emailEt = findViewById(R.id.email);
             EditText passEd = findViewById(R.id.password);
@@ -47,6 +50,9 @@ public class LoginActivity extends AppCompatActivity {
                     String passEncode = cursor.getString(1).toString();
                     System.out.println("pass:"+passEncode);
                     if(isValid(password,passEncode) == true){
+                        User user = new User(email,passEncode);
+                        userLocalStore.storeUserData(user);
+                        userLocalStore.setUserLoggedIn();
                         Intent intent = new Intent(this, ContainerActivity.class);
                         startActivity(intent);
                         Toast.makeText(this, "welcome friend ! ", Toast.LENGTH_SHORT).show();

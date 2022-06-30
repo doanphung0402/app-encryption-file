@@ -11,6 +11,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -20,6 +21,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,17 +32,24 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 
+import com.dustinredmond.BCrypt;
 import com.example.FIleEncryptUtils.AES_BC;
 import com.example.FIleEncryptUtils.KeyStoreUtils;
 import com.example.FIleEncryptUtils.MAC_BC;
 import com.example.FIleEncryptUtils.Utils_BC;
+import com.example.project3.Utils.User;
+import com.example.project3.Utils.UserLocalStore;
 import com.example.project3.UtilsEncypt.DecryptFile;
 import com.example.project3.UtilsEncypt.EncryptFile;
 
@@ -74,13 +84,14 @@ public class DecryptActivity extends AppCompatActivity {
     ArrayList<Uri> fileChooser = new ArrayList<>();
     List<String> listPositionFileDecrypt  = new ArrayList<>();
     ListView listView;
+    int sizeBlock =1024;
     FileChooserADDecrypt fileChooserAdapter;
-
+    UserLocalStore userLocalStore ;
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        userLocalStore =new UserLocalStore(this);
         checkAndRequestPermissions();
         setContentView(R.layout.activity_decrypt);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
@@ -105,8 +116,8 @@ public class DecryptActivity extends AppCompatActivity {
                 listFile.add(new FileChooserInfo(nameFile, pathFile, iconFile));
             }
             Button btnDecryptFile = (Button) findViewById(R.id.continue_btn_decrypt);
-            if (listFile.isEmpty()){
-                 btnDecryptFile.setEnabled(false);
+            if (!listFile.isEmpty()){
+                 btnDecryptFile.setVisibility(View.VISIBLE);
             }
             fileChooser.clear();
             fileChooserAdapter = new FileChooserADDecrypt(this, R.layout.file_decrypt_item, listFile);
@@ -165,6 +176,72 @@ public class DecryptActivity extends AppCompatActivity {
         super.onActivityResult(requestcode, resultCode, data);
 
     }
+
+
+    private void logout() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+    }
+    public boolean checkPass(String clearTextPassword, String hashedPass) {
+        return BCrypt.checkpw(clearTextPassword, hashedPass);
+    }
+    private void openDialogAuthPassDecrypt() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.activity_auth_password);
+        Window window = dialog.getWindow();
+        if (window == null) {
+            logout();
+        }
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        WindowManager.LayoutParams windownAtt = window.getAttributes();
+        windownAtt.gravity = Gravity.CENTER;
+        window.setAttributes(windownAtt);
+        dialog.show();
+        EditText passAuthEt = (EditText) dialog.findViewById(R.id.password_auth);
+        Button btn_auth = (Button) dialog.findViewById(R.id.btn_continue_dialog_auth);
+        User user = userLocalStore.getUser();
+        btn_auth.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View view) {
+                String passAuth = passAuthEt.getText().toString();
+                if (passAuth.isEmpty()) {
+                    Toast.makeText(DecryptActivity.this, "Nhập mật khẩu", Toast.LENGTH_SHORT).show();
+                } else {
+                    String passwordEncode = user.getPassword();
+                    boolean checkLogin = userLocalStore.checkLoggedIn();
+
+                    if (checkLogin == true && checkPass(passAuth, passwordEncode) == true) {
+                        Log.i("list file decrypt ", String.valueOf(listFile.size())) ;
+                        ArrayList<FileChooserInfo> listFileDecrypt = new ArrayList<>();
+                        if(listPositionFileDecrypt.isEmpty()){
+                            listFileDecrypt = listFile ;
+                        }else{
+                            for (String position :listPositionFileDecrypt){
+                                Log.i("postion",position);
+                                listFileDecrypt.add(listFile.get(Integer.parseInt(position)));
+                            }
+                        }
+                        Log.i("list file Decrypt", String.valueOf(listFileDecrypt.size()));
+
+                        DecryptFile decrypt = new DecryptFile(listFileDecrypt,getApplicationContext());
+                        decrypt.decryptFile();
+                        listFileDecrypt.clear();
+                        finish();
+                        startActivity(getIntent());
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Có lỗi", Toast.LENGTH_SHORT).show();
+                        listFile.clear();
+                        logout();
+                    }
+                }
+            }
+        });
+
+    }
+
 
 
 
@@ -261,22 +338,7 @@ public class DecryptActivity extends AppCompatActivity {
     public void decriptFile(View view)  {
         String EXTERNAL_PATH = Environment.getExternalStorageDirectory().getPath();
         Log.i("size list", String.valueOf(listFile.size()));
-        ArrayList<FileChooserInfo> listFileDecrypt = new ArrayList<>();
-        if(listPositionFileDecrypt.isEmpty()){
-             listFileDecrypt = listFile ;
-        }else{
-            for (String position :listPositionFileDecrypt){
-                Log.i("postion",position);
-                listFileDecrypt.add(listFile.get(Integer.parseInt(position)));
-            }
-        }
-        Log.i("list file Decrypt", String.valueOf(listFileDecrypt.size()));
-
-        DecryptFile decrypt = new DecryptFile(listFileDecrypt,getApplicationContext());
-        decrypt.decryptFile();
-        listFileDecrypt.clear();
-        finish();
-        startActivity(getIntent());
+        openDialogAuthPassDecrypt();
     }
 }
 

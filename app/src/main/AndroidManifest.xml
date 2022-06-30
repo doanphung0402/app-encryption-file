@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Project3">
         <activity
+            android:name=".AuthPasswordActivity"
+            android:exported="true" />
+        <activity
             android:name=".ChooserFileMode"
             android:exported="true" />
         <activity

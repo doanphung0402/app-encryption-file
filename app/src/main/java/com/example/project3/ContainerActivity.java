@@ -13,7 +13,6 @@ import com.google.android.material.navigation.NavigationBarView;
 public class ContainerActivity extends AppCompatActivity {
    BottomNavigationView bottomNavigationView ;
    HomeFragment homeFragment =  new HomeFragment() ;
-   ProfileFragment profileFragment = new ProfileFragment();
    SettingFragment settingFragment = new SettingFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +27,6 @@ public class ContainerActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.home_item_icon:
                         getSupportFragmentManager().beginTransaction().replace(R.id.framelayout,homeFragment).commit();
-                        return true ;
-                    case R.id.profile_item_icon:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.framelayout,profileFragment).commit();
                         return true ;
                     case R.id.setting_item_icon:
                         getSupportFragmentManager().beginTransaction().replace(R.id.framelayout,settingFragment).commit();
