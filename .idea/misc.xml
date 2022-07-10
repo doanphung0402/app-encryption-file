@@ -8,6 +8,9 @@
         <entry key="..\:/Project3/app/src/main/res/drawable/bg_while_corner_16.xml" value="0.1046875" />
         <entry key="..\:/Project3/app/src/main/res/drawable/bg_white_corner_16.xml" value="0.17592592592592593" />
         <entry key="..\:/Project3/app/src/main/res/drawable/bg_yellow_corner_16_top_left_top_right.xml" value="0.17592592592592593" />
+        <entry key="..\:/Project3/app/src/main/res/drawable/cerclebackgroundpurple.xml" value="0.1" />
+        <entry key="..\:/Project3/app/src/main/res/drawable/ic_baseline_folder_24.xml" value="0.1" />
+        <entry key="..\:/Project3/app/src/main/res/drawable/ic_baseline_lock_24.xml" value="0.1" />
         <entry key="..\:/Project3/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.17592592592592593" />
         <entry key="..\:/Project3/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.17592592592592593" />
         <entry key="..\:/Project3/app/src/main/res/layout/activity_auth_password.xml" value="0.2389558232931727" />
@@ -20,7 +23,7 @@
         <entry key="..\:/Project3/app/src/main/res/layout/activity_reg.xml" value="0.1" />
         <entry key="..\:/Project3/app/src/main/res/layout/file_chooser_info_item_activity.xml" value="0.25" />
         <entry key="..\:/Project3/app/src/main/res/layout/file_decrypt_item.xml" value="0.25" />
-        <entry key="..\:/Project3/app/src/main/res/layout/fragment_home.xml" value="0.1" />
+        <entry key="..\:/Project3/app/src/main/res/layout/fragment_home.xml" value="0.22" />
         <entry key="..\:/Project3/app/src/main/res/layout/fragment_profile.xml" value="0.20416666666666666" />
         <entry key="..\:/Project3/app/src/main/res/layout/fragment_setting.xml" value="0.20416666666666666" />
         <entry key="..\:/Project3/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1175925925925926" />

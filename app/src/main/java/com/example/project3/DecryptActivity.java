@@ -40,6 +40,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -91,9 +93,10 @@ public class DecryptActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_decrypt);
         userLocalStore =new UserLocalStore(this);
         checkAndRequestPermissions();
-        setContentView(R.layout.activity_decrypt);
+
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("file-position"));
         listView = (ListView) findViewById(R.id.list_view_file_decrypt);
@@ -176,7 +179,23 @@ public class DecryptActivity extends AppCompatActivity {
         super.onActivityResult(requestcode, resultCode, data);
 
     }
+    public void openProcessBar(){
+        Log.i("Progess","In progress");
+        ProgressBar circleProcessBar =findViewById(R.id.progressBarCircle1);
+        TextView tvProcessBar = findViewById(R.id.textProcessBar1);
+        circleProcessBar.setVisibility(View.VISIBLE);
+        tvProcessBar.setVisibility(View.VISIBLE);
 
+        tvProcessBar.setText("ĐANG MÃ HÓA , VUI LÒNG CHỜ ! ");
+    }
+    private void closeProcessBar(){
+        ProgressBar circleProcessBar = (ProgressBar) findViewById(R.id.progressBarCircle1);
+//        ProgressBar hozProcessBar =(ProgressBar) findViewById(R.id.progressBarHorizontal);
+        TextView tvProcessBar = findViewById(R.id.textProcessBar1);
+        circleProcessBar.setVisibility(View.GONE);
+//        hozProcessBar.setVisibility(View.GONE);
+        tvProcessBar.setVisibility(View.GONE);
+    }
 
     private void logout() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -206,6 +225,7 @@ public class DecryptActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
+                dialog.dismiss();
                 String passAuth = passAuthEt.getText().toString();
                 if (passAuth.isEmpty()) {
                     Toast.makeText(DecryptActivity.this, "Nhập mật khẩu", Toast.LENGTH_SHORT).show();
@@ -214,6 +234,7 @@ public class DecryptActivity extends AppCompatActivity {
                     boolean checkLogin = userLocalStore.checkLoggedIn();
 
                     if (checkLogin == true && checkPass(passAuth, passwordEncode) == true) {
+                        openProcessBar();
                         Log.i("list file decrypt ", String.valueOf(listFile.size())) ;
                         ArrayList<FileChooserInfo> listFileDecrypt = new ArrayList<>();
                         if(listPositionFileDecrypt.isEmpty()){
@@ -227,7 +248,9 @@ public class DecryptActivity extends AppCompatActivity {
                         Log.i("list file Decrypt", String.valueOf(listFileDecrypt.size()));
 
                         DecryptFile decrypt = new DecryptFile(listFileDecrypt,getApplicationContext());
+
                         decrypt.decryptFile();
+                        closeProcessBar();
                         listFileDecrypt.clear();
                         finish();
                         startActivity(getIntent());

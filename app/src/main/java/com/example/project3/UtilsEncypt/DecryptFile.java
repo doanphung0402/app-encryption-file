@@ -87,7 +87,6 @@ public class DecryptFile {
                 String fileNameOrigin = nameFile.substring(nameFile.indexOf("/") + 1);
                 Log.i("name file ", fileNameOrigin);
                 try {
-
                     if (!fileStepDecrypt.exists()) {
                         fileStepDecrypt.createNewFile();
                         Log.i("file", "File step decrypt created ");

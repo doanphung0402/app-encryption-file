@@ -28,6 +28,7 @@ import javax.crypto.SecretKey;
 public class Utils_BC {
 
     public void createFileProtected(File originFile, File macFile,byte[] iv, File outputFile,int sizeBlock) throws IOException {
+        Log.i("size block cfpt", String.valueOf(sizeBlock));
         FileOutputStream outFileStream = new FileOutputStream(outputFile);
         FileInputStream inputHmacFile = new FileInputStream(macFile);
         FileInputStream inputOriginFile = new FileInputStream(originFile);
@@ -37,19 +38,17 @@ public class Utils_BC {
         int i;
 
         while ((i = inputHmacFile.read(buferHmacFile)) != -1) {
-
             outFileStream.write(buferHmacFile, 0, i);  //88 byte
-
         }
         outFileStream.write(iv); // 16 byte
 
-        byte[] bufferBlockSize = new byte[16];
-        Arrays.fill(bufferBlockSize, (byte) 0);
-
-        for (int k = 0; k < String.valueOf(sizeBlock).getBytes().length; k++) {
-            bufferBlockSize[k] = String.valueOf(sizeBlock).getBytes()[k];
-        }
-        outFileStream.write(bufferBlockSize);
+//        byte[] bufferBlockSize = new byte[16];
+//        Arrays.fill(bufferBlockSize, (byte) 0);
+//
+//        for (int k = 0; k < String.valueOf(sizeBlock).getBytes().length; k++) {
+//            bufferBlockSize[k] = String.valueOf(sizeBlock).getBytes()[k];
+//        }
+//        outFileStream.write(bufferBlockSize);
         int k;
         while ((k = inputOriginFile.read(buferOriginFile)) != -1) {
             outFileStream.write(buferOriginFile, 0, k);
@@ -59,7 +58,8 @@ public class Utils_BC {
         outFileStream.close();
         inputHmacFile.close();
         inputOriginFile.close();
-        macFile.delete(); originFile.delete();
+        macFile.delete();
+//        originFile.delete();
     }
 
     //
@@ -80,22 +80,21 @@ public class Utils_BC {
         fileProtRandomAcc.seek(88);
         fileProtRandomAcc.read(iv);
         fileProtRandomAcc.seek(104);
-        fileProtRandomAcc.read(buferBlockSize);
-        fileProtRandomAcc.seek(120);
-        int posByte = 0;
-        for(int k =0 ; k<buferBlockSize.length; k++){
-             if( buferBlockSize[k] == (byte) 0){
-                 posByte = k;
-                 break ;
-             }
-        }
-        byte[] buferBlockSize1 = new byte[posByte];
-        for (int j =0 ; j <posByte;j++){
-             buferBlockSize1[j] = buferBlockSize[j];
-        }
-        String b = new String(buferBlockSize1, StandardCharsets.UTF_8);
-        int sizeBlock= Integer.parseInt(b);
-        Log.i("size block decypt", String.valueOf(sizeBlock));
+//        fileProtRandomAcc.read(buferBlockSize);
+//        fileProtRandomAcc.seek(120);
+//        int posByte = 0;
+//        for(int k =0 ; k<buferBlockSize.length; k++){
+//             if( buferBlockSize[k] == (byte) 0){
+//                 posByte = k;
+//                 break ;
+//             }
+//        }
+//        byte[] buferBlockSize1 = new byte[posByte];
+//        for (int j =0 ; j <posByte;j++){
+//             buferBlockSize1[j] = buferBlockSize[j];
+//        }
+        int sizeBlock= 102400 ;
+
         byte[] buferFileEncyptOrigin = new byte[sizeBlock];
         AES_BC aes_bc = new AES_BC(sizeBlock);
 

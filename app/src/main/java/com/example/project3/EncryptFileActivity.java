@@ -106,6 +106,7 @@ public class EncryptFileActivity extends AppCompatActivity {
                 Log.i("encrypt file", "encypt file");
                 openDialogChooserFileMode();
 
+
             }
         });
 
@@ -189,30 +190,32 @@ public class EncryptFileActivity extends AppCompatActivity {
             fileChooser.clear();
         } //end if onActiivity
     }
-    private void openProcessBar(int fileDone,int fileRemaining,int increase){
-        String tv = fileDone+"/"+fileRemaining;
-        ProgressBar circleProcessBar = (ProgressBar) findViewById(R.id.progressBarCircle);
-        ProgressBar hozProcessBar =(ProgressBar) findViewById(R.id.progressBarHorizontal);
+    public void openProcessBar(){
+        Log.i("Progess","In progress");
+        //int fileDone,int fileRemaining,int increase
+//        String tv = fileDone+"/"+fileRemaining;
+        ProgressBar circleProcessBar =findViewById(R.id.progressBarCircle);
+//        ProgressBar hozProcessBar =(ProgressBar) findViewById(R.id.progressBarHorizontal);
         TextView tvProcessBar = findViewById(R.id.textProcessBar);
-        circleProcessBar.setVisibility(View.VISIBLE);
+          circleProcessBar.setVisibility(View.VISIBLE);
 //        hozProcessBar.setVisibility(View.VISIBLE);
-//        tvProcessBar.setVisibility(View.VISIBLE);
+        tvProcessBar.setVisibility(View.VISIBLE);
 
-        tvProcessBar.setText(tv);
-
-        int current = hozProcessBar.getProgress();
-        if(current+increase >= hozProcessBar.getMax()){
-             hozProcessBar.setProgress(0);
-        }
-        hozProcessBar.setProgress(current+increase);
+        tvProcessBar.setText("ĐANG MÃ HÓA , VUI LÒNG CHỜ ! ");
+//
+//        int current = hozProcessBar.getProgress();
+//        if(current+increase >= hozProcessBar.getMax()){
+//             hozProcessBar.setProgress(0);
+//        }
+//        hozProcessBar.setProgress(current+increase);
     }
     private void closeProcessBar(){
         ProgressBar circleProcessBar = (ProgressBar) findViewById(R.id.progressBarCircle);
-        ProgressBar hozProcessBar =(ProgressBar) findViewById(R.id.progressBarHorizontal);
+//        ProgressBar hozProcessBar =(ProgressBar) findViewById(R.id.progressBarHorizontal);
         TextView tvProcessBar = findViewById(R.id.textProcessBar);
         circleProcessBar.setVisibility(View.GONE);
 //        hozProcessBar.setVisibility(View.GONE);
-//        tvProcessBar.setVisibility(View.GONE);
+        tvProcessBar.setVisibility(View.GONE);
     }
     private void closeProgessBarHoz(){
         ProgressBar circleProcessBar = (ProgressBar) findViewById(R.id.progressBarCircle);
@@ -231,7 +234,6 @@ public class EncryptFileActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public ArrayList<Uri> encriptFile() {
-
         String pathfile = EXTERNAL_PATH + "/Android/data/com.example.project3";
         File intermediateFolder = new File(pathfile, "folder.intermediate");
         if (!intermediateFolder.exists()) {
@@ -244,12 +246,13 @@ public class EncryptFileActivity extends AppCompatActivity {
         int position = 0;
         ArrayList<Uri> ErrorUriFile = new ArrayList<>();
         while (position < listFile.size()) {
-            openProcessBar(position,listFile.size()-position,10);
+
             Log.i("list size", String.valueOf(listFile.size()));
             Uri uriFile = listFile.get(position).getUrlFile();
 
             File fileOrigin = new File(UriUtils.getPathFromUri(getApplicationContext(), uriFile));
-            long sizeBlock = fileOrigin.length()/10;
+//            long sizeBlock = fileOrigin.length()/100;
+            int sizeBlock = 102400;
             AES_BC aes_bc = new AES_BC((int) sizeBlock);
             Log.i("size block encrypt ", String.valueOf(sizeBlock));
             if (fileOrigin.exists()) {
@@ -282,11 +285,11 @@ public class EncryptFileActivity extends AppCompatActivity {
                         Log.i("key", "key not found");
                         ErrorUriFile.add(uriFile);
                     }
-                    MAC_BC mac_bc = new MAC_BC((int) sizeBlock);
+                    MAC_BC mac_bc = new MAC_BC(sizeBlock);
                     byte[] iv = aes_bc.encriptFile(secretKey, fileOrigin, encrypCBCFile);
                     mac_bc.encryptFileWithHmac(secretKey, encrypCBCFile, hMacFile);
                     Utils_BC utils_bc = new Utils_BC();
-                    utils_bc.createFileProtected(encrypCBCFile, hMacFile, iv, encryptFileTotal, (int) sizeBlock);
+                    utils_bc.createFileProtected(encrypCBCFile, hMacFile, iv, encryptFileTotal,sizeBlock);
                     encrypCBCFile.delete();      hMacFile.delete() ;
                     Log.i("done", "done encrypt!");
                 } catch (Exception e) {
@@ -297,11 +300,12 @@ public class EncryptFileActivity extends AppCompatActivity {
                 ErrorUriFile.add(uriFile); // insert uri not exist
             }
             boolean stDelete = fileOrigin.delete();
+
             Log.i("size error file", String.valueOf(ErrorUriFile.size()));
             Log.e("status delete", String.valueOf(stDelete));
             position = position +1 ;
         }
-        closeProcessBar();
+
         Toast.makeText(this, "Mã hóa hoàn tất ", Toast.LENGTH_SHORT).show();
         return ErrorUriFile ;
 
@@ -342,9 +346,16 @@ public class EncryptFileActivity extends AppCompatActivity {
                     boolean checkLogin = userLocalStore.checkLoggedIn();
 
                     if (checkLogin == true && checkPass(passAuth, passwordEncode) == true) {
+                        openProcessBar();
+//                        ProgressBar circleProcessBar = (ProgressBar) findViewById(R.id.progressBarCircle);
+//                        TextView tvProcessBar = findViewById(R.id.textProcessBar);
+//                        circleProcessBar.setVisibility(View.VISIBLE);
                         String EXTERNAL_PATH = Environment.getExternalStorageDirectory().getPath();
                         EncryptFile encrypt = new EncryptFile(listFile, getApplicationContext());
+//                        Log.i("progess", "start");
+
                         ArrayList<Uri> listFileError = encriptFile();
+                        closeProcessBar();
                         listFile.clear();
                         if (listFileError.isEmpty()){
                              Toast.makeText(getApplicationContext(),"Mã hóa thành công",Toast.LENGTH_SHORT).show();

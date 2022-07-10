@@ -29,8 +29,8 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:background="@drawable/cerclebackgroundpurple"
-                    android:src="@drawable/ic_baseline_folder_24"
+                    android:background="@drawable/cerclebackgroundyellow"
+                    android:src="@drawable/ic_baseline_lock_24"
                     android:padding="10dp"
                     />
                 <TextView
@@ -69,7 +69,7 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:background="@drawable/cerclebackgroundpink"
+                    android:background="@drawable/cerclebackgroundorange"
                     android:src="@drawable/ic_baseline_folder_24"
                     android:padding="10dp"
                     />
@@ -88,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Giữ an toàn cho file"
+                    android:text="Xem các tệp của bạn"
                     android:padding="5dp"
                     android:textColor="@color/colorAccent"/>
 

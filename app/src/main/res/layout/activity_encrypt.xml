@@ -55,14 +55,18 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="250dp"
             android:visibility="gone"
+
             />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/progressBarHorizontal"
+            android:text="ffff"
             android:id="@+id/textProcessBar"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="220dp"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
             android:visibility="gone"
             />
         <ProgressBar
