@@ -46,7 +46,6 @@ public class MAC_BC {
         outputStream.write(StringHmac.getBytes());
         inputStream.close();
         outputStream.close();
-
     }
 
     @SuppressLint("NewApi")

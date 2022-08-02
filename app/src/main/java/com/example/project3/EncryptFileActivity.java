@@ -1,10 +1,10 @@
 package com.example.project3;
 
+
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.loader.content.CursorLoader;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -21,16 +21,14 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.ParcelFileDescriptor;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
+
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -40,42 +38,26 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.dustinredmond.BCrypt;
 import com.example.FIleEncryptUtils.AES_BC;
-import com.example.FIleEncryptUtils.KeyStoreUtils;
 import com.example.FIleEncryptUtils.MAC_BC;
 import com.example.FIleEncryptUtils.Utils_BC;
-import com.example.project3.Exception.AuthenticationException;
 import com.example.project3.Utils.User;
 import com.example.project3.Utils.UserLocalStore;
-import com.example.project3.UtilsEncypt.EncryptFile;
 import com.obsez.android.lib.filechooser.ChooserDialog;
 
 
-import org.w3c.dom.Text;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.net.URISyntaxException;
-import java.security.GeneralSecurityException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.Security;
-import java.security.spec.InvalidKeySpecException;
+
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import javax.crypto.SecretKey;
 
@@ -97,13 +79,11 @@ public class EncryptFileActivity extends AppCompatActivity {
         Button btn_continue = (Button) findViewById(R.id.continue_btn_encrypt);
         Button btn_chooser_file = (Button) findViewById(R.id.btn_choose_file);
         userLocalStore = new UserLocalStore(this);
-//        if(listFile.isEmpty()){
-//            btn_continue.setEnabled(false);
-//        }
         btn_chooser_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.i("encrypt file", "encypt file");
+
                 openDialogChooserFileMode();
 
 
@@ -190,40 +170,6 @@ public class EncryptFileActivity extends AppCompatActivity {
             fileChooser.clear();
         } //end if onActiivity
     }
-    public void openProcessBar(){
-        Log.i("Progess","In progress");
-        //int fileDone,int fileRemaining,int increase
-//        String tv = fileDone+"/"+fileRemaining;
-        ProgressBar circleProcessBar =findViewById(R.id.progressBarCircle);
-//        ProgressBar hozProcessBar =(ProgressBar) findViewById(R.id.progressBarHorizontal);
-        TextView tvProcessBar = findViewById(R.id.textProcessBar);
-          circleProcessBar.setVisibility(View.VISIBLE);
-//        hozProcessBar.setVisibility(View.VISIBLE);
-        tvProcessBar.setVisibility(View.VISIBLE);
-
-        tvProcessBar.setText("ĐANG MÃ HÓA , VUI LÒNG CHỜ ! ");
-//
-//        int current = hozProcessBar.getProgress();
-//        if(current+increase >= hozProcessBar.getMax()){
-//             hozProcessBar.setProgress(0);
-//        }
-//        hozProcessBar.setProgress(current+increase);
-    }
-    private void closeProcessBar(){
-        ProgressBar circleProcessBar = (ProgressBar) findViewById(R.id.progressBarCircle);
-//        ProgressBar hozProcessBar =(ProgressBar) findViewById(R.id.progressBarHorizontal);
-        TextView tvProcessBar = findViewById(R.id.textProcessBar);
-        circleProcessBar.setVisibility(View.GONE);
-//        hozProcessBar.setVisibility(View.GONE);
-        tvProcessBar.setVisibility(View.GONE);
-    }
-    private void closeProgessBarHoz(){
-        ProgressBar circleProcessBar = (ProgressBar) findViewById(R.id.progressBarCircle);
-        ProgressBar hozProcessBar =(ProgressBar) findViewById(R.id.progressBarHorizontal);
-        TextView tvProcessBar = findViewById(R.id.textProcessBar);
-        hozProcessBar.setVisibility(View.GONE);
-        tvProcessBar.setVisibility(View.GONE);
-    }
 
 
     private void logout() {
@@ -233,7 +179,8 @@ public class EncryptFileActivity extends AppCompatActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public ArrayList<Uri> encriptFile() {
+    public ArrayList<Uri> encriptFile(ArrayList<FileChooserInfo> listFile) {
+
         String pathfile = EXTERNAL_PATH + "/Android/data/com.example.project3";
         File intermediateFolder = new File(pathfile, "folder.intermediate");
         if (!intermediateFolder.exists()) {
@@ -299,10 +246,10 @@ public class EncryptFileActivity extends AppCompatActivity {
             } else {
                 ErrorUriFile.add(uriFile); // insert uri not exist
             }
-            boolean stDelete = fileOrigin.delete();
+//            boolean stDelete = fileOrigin.delete();
 
             Log.i("size error file", String.valueOf(ErrorUriFile.size()));
-            Log.e("status delete", String.valueOf(stDelete));
+//            Log.e("status delete", String.valueOf(stDelete));
             position = position +1 ;
         }
 
@@ -312,7 +259,21 @@ public class EncryptFileActivity extends AppCompatActivity {
     }
 
     
-    
+    private void openLoading(){
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.activity_reloading);
+        Window window = dialog.getWindow();
+        if (window == null) {
+            logout();
+        }
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        WindowManager.LayoutParams windownAtt = window.getAttributes();
+        windownAtt.gravity = Gravity.CENTER;
+        window.setAttributes(windownAtt);
+        dialog.show();
+    }
 
     private void openDialogAuthPass() {
 
@@ -342,21 +303,21 @@ public class EncryptFileActivity extends AppCompatActivity {
                 if (passAuth.isEmpty()) {
                     Toast.makeText(EncryptFileActivity.this, "Nhập mật khẩu", Toast.LENGTH_SHORT).show();
                 } else {
+
                     String passwordEncode = user.getPassword();
                     boolean checkLogin = userLocalStore.checkLoggedIn();
-
                     if (checkLogin == true && checkPass(passAuth, passwordEncode) == true) {
-                        openProcessBar();
-//                        ProgressBar circleProcessBar = (ProgressBar) findViewById(R.id.progressBarCircle);
-//                        TextView tvProcessBar = findViewById(R.id.textProcessBar);
-//                        circleProcessBar.setVisibility(View.VISIBLE);
-                        String EXTERNAL_PATH = Environment.getExternalStorageDirectory().getPath();
-                        EncryptFile encrypt = new EncryptFile(listFile, getApplicationContext());
-//                        Log.i("progess", "start");
-
-                        ArrayList<Uri> listFileError = encriptFile();
-                        closeProcessBar();
+                        ProgressBar progressBar = findViewById(R.id.progressBarCircle);
+                        progressBar.setVisibility(View.VISIBLE);
+                        //encrypt file
+                        Log.i("size list file", String.valueOf(listFile.size()));
+                        ProgressLoadingAsyncTask progressLoadingAsyncTask ;
+                        progressLoadingAsyncTask = new ProgressLoadingAsyncTask(EncryptFileActivity.this,listFile);
+                        progressLoadingAsyncTask.execute();
+                        ArrayList<Uri> listFileError =new ArrayList<Uri>();
+                        listFileError = encriptFile(listFile); //encrypt file,
                         listFile.clear();
+                         progressBar.setVisibility(View.GONE);
                         if (listFileError.isEmpty()){
                              Toast.makeText(getApplicationContext(),"Mã hóa thành công",Toast.LENGTH_SHORT).show();
                         }else{
@@ -369,11 +330,7 @@ public class EncryptFileActivity extends AppCompatActivity {
                             }
                             listFileError.clear();
                         }
-
-                        finish();
                         startActivity(getIntent());
-                        Log.i("encrypt", "EncryptFileActivity done!");
-
                     } else {
                         Toast.makeText(getApplicationContext(), "Có lỗi", Toast.LENGTH_SHORT).show();
                         listFile.clear();
@@ -382,13 +339,10 @@ public class EncryptFileActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
-
     public boolean checkPass(String clearTextPassword, String hashedPass) {
         return BCrypt.checkpw(clearTextPassword, hashedPass);
     }
-
     private void openDialogChooserFileMode() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -466,7 +420,6 @@ public class EncryptFileActivity extends AppCompatActivity {
             }
         });
     }
-
     public String getFileNameByUri(Uri uriFile) {
         String uriFileString = String.valueOf(uriFile);
         int totalCharacters = 0;

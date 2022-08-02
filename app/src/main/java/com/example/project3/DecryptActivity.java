@@ -86,7 +86,6 @@ public class DecryptActivity extends AppCompatActivity {
     ArrayList<Uri> fileChooser = new ArrayList<>();
     List<String> listPositionFileDecrypt  = new ArrayList<>();
     ListView listView;
-    int sizeBlock =1024;
     FileChooserADDecrypt fileChooserAdapter;
     UserLocalStore userLocalStore ;
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -101,6 +100,9 @@ public class DecryptActivity extends AppCompatActivity {
                 new IntentFilter("file-position"));
         listView = (ListView) findViewById(R.id.list_view_file_decrypt);
         Button btn_continue = (Button) findViewById(R.id.continue_btn_decrypt);
+        if(listPositionFileDecrypt.isEmpty()){
+             btn_continue.setEnabled(false);
+        }
         String path = Environment.getExternalStorageDirectory().getPath()
                 +  File.separator + "Android" + File.separator+"data/com.example.project3/file_encript";
         File file = new File(path);
@@ -156,10 +158,9 @@ public class DecryptActivity extends AppCompatActivity {
     public void onContentChanged() {
         super.onContentChanged();
         View empty = findViewById(R.id.empty_decrypt_list);
+
         ListView list = (ListView) findViewById(R.id.list_view_file_decrypt);
         list.setEmptyView(empty);
-
-
 
     }
 
@@ -205,6 +206,14 @@ public class DecryptActivity extends AppCompatActivity {
         return BCrypt.checkpw(clearTextPassword, hashedPass);
     }
     private void openDialogAuthPassDecrypt() {
+        ArrayList<FileChooserInfo> listFileDecrypt = new ArrayList<>();
+        if(!listPositionFileDecrypt.isEmpty()){
+            for (String position :listPositionFileDecrypt){
+                Log.i("postion",position);
+                listFileDecrypt.add(listFile.get(Integer.parseInt(position)));
+            }
+        }
+        Log.i("list file Decrypt", String.valueOf(listFileDecrypt.size()));
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.activity_auth_password);
@@ -236,19 +245,7 @@ public class DecryptActivity extends AppCompatActivity {
                     if (checkLogin == true && checkPass(passAuth, passwordEncode) == true) {
                         openProcessBar();
                         Log.i("list file decrypt ", String.valueOf(listFile.size())) ;
-                        ArrayList<FileChooserInfo> listFileDecrypt = new ArrayList<>();
-                        if(listPositionFileDecrypt.isEmpty()){
-                            listFileDecrypt = listFile ;
-                        }else{
-                            for (String position :listPositionFileDecrypt){
-                                Log.i("postion",position);
-                                listFileDecrypt.add(listFile.get(Integer.parseInt(position)));
-                            }
-                        }
-                        Log.i("list file Decrypt", String.valueOf(listFileDecrypt.size()));
-
                         DecryptFile decrypt = new DecryptFile(listFileDecrypt,getApplicationContext());
-
                         decrypt.decryptFile();
                         closeProcessBar();
                         listFileDecrypt.clear();
@@ -353,14 +350,25 @@ public class DecryptActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
                        String qty = intent.getStringExtra("position");
-            listPositionFileDecrypt.add(qty);
+
+            if(!listPositionFileDecrypt.contains(qty)){
+                listPositionFileDecrypt.add(qty);
+            }else{
+                 listPositionFileDecrypt.remove(qty);
+            }
+
+            Button btn_continue = (Button) findViewById(R.id.continue_btn_decrypt);
+            if(!listPositionFileDecrypt.isEmpty()){
+                btn_continue.setEnabled(true);
+            }else {
+                 btn_continue.setEnabled(false);
+            }
 
         }
     };
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void decriptFile(View view)  {
         String EXTERNAL_PATH = Environment.getExternalStorageDirectory().getPath();
-        Log.i("size list", String.valueOf(listFile.size()));
         openDialogAuthPassDecrypt();
     }
 }
