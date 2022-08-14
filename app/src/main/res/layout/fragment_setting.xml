@@ -5,10 +5,35 @@
     android:layout_height="match_parent"
     tools:context=".SettingFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textColor="@color/black"
+        android:text="Tên :Project3"
+        />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_marginTop="25dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Phiên bản : v1.1.1" />
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_marginTop="55dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Ngày phát hành : 15/8/2022" />
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_marginTop="85dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Phát triển: Doãn Minh Phụng" />
 
 </FrameLayout>

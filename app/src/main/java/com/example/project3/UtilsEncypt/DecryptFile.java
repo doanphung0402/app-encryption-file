@@ -66,7 +66,6 @@ public class DecryptFile {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void decryptFile() {
         Log.i("Decrypt file", String.valueOf(listFileDecrypt.size()));
-
         File fileDecryptFolder = new File(EXTERNAL_PATH, "Project3_File");
         if (!fileDecryptFolder.exists()) {
             fileDecryptFolder.mkdir();
@@ -80,12 +79,8 @@ public class DecryptFile {
             AES_BC aes_bc = new AES_BC();
             File fileStepDecrypt = new File(EXTERNAL_PATH + "/Android/data/com.example.project3", "file_step_decrypt.step");
             if (fileOrigin.exists()) {
-                Log.i("uri file ", fileOrigin.getAbsolutePath());
-
                 String nameFile = listFileDecrypt.get(position).getNameFile();
-                Log.i("name file ", nameFile);
                 String fileNameOrigin = nameFile.substring(nameFile.indexOf("/") + 1);
-                Log.i("name file ", fileNameOrigin);
                 try {
                     if (!fileStepDecrypt.exists()) {
                         fileStepDecrypt.createNewFile();
@@ -100,10 +95,9 @@ public class DecryptFile {
                         break;
                     }
                      userLocalStore =new UserLocalStore(getContext());
-                    String key = userLocalStore.getUser().username+"_KEY";
+                    String key = userLocalStore.getUser().username+fileOrigin.getName()+"_KEY";
                     Log.i("key decrypt", key);
                     SecretKey secretKey = aes_bc.getKey(key);
-
                     if (secretKey == null) {
                         Log.i("key", "key not found");
                         ErrorUriFile.add(uriFile);
@@ -127,7 +121,6 @@ public class DecryptFile {
                 Log.e("file", "file not exist");
                 ErrorUriFile.add(uriFile); // insert uri not exist
             }
-
             Log.e("error uri", String.valueOf(ErrorUriFile.size()));
             position = position + 1;
         }

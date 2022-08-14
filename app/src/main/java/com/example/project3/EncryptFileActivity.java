@@ -36,7 +36,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -83,13 +82,9 @@ public class EncryptFileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.i("encrypt file", "encypt file");
-
                 openDialogChooserFileMode();
-
-
             }
         });
-
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -122,7 +117,6 @@ public class EncryptFileActivity extends AppCompatActivity {
         View empty = findViewById(R.id.empty);
         ListView list = (ListView) findViewById(R.id.list_view_file);
         list.setEmptyView(empty);
-
     }
 
     int requestcode = 1;
@@ -148,23 +142,26 @@ public class EncryptFileActivity extends AppCompatActivity {
 
                 for (int i = 0; i < data.getClipData().getItemCount(); i++) {
                     Uri uri = data.getClipData().getItemAt(i).getUri();
-                    fileChooser.add(uri);
+                    String uriString = UriUtils.getPathFromUri(getApplicationContext(),uri);
+                    fileChooser.add(Uri.parse(uriString));
                 }
             } else {
                 Uri uri = data.getData();
-                fileChooser.add(uri);
+                String uriString = UriUtils.getPathFromUri(getApplicationContext(),uri);
+                fileChooser.add(Uri.parse(uriString));
             }
             if(!fileChooser.isEmpty()){
                 btn_encrypt.setVisibility(View.VISIBLE);
             }
             for (Uri urlFile : fileChooser) {
-                String nameFile = getFileName(urlFile, getApplicationContext());
+                String nameFile = getFileNameByUri(urlFile);
+                Log.i("name file line 158",nameFile);
                 Uri pathFile = urlFile;
                 String extentionFile = getExtensionByStringHandling(nameFile).get();
                 int iconFile = getImageIconFile(extentionFile);
                 listFile.add(new FileChooserInfo(nameFile, pathFile, iconFile));
             }
-//            fileChooser.clear();
+            fileChooser.clear();
             fileChooserAdapter = new FileChooserAdapter(this, R.layout.file_chooser_info_item_activity, listFile);
             lv.setAdapter(fileChooserAdapter);
             fileChooser.clear();
@@ -192,20 +189,17 @@ public class EncryptFileActivity extends AppCompatActivity {
         }
         int position = 0;
         ArrayList<Uri> ErrorUriFile = new ArrayList<>();
-        while (position < listFile.size()) {
 
+        while (position < listFile.size()) {
             Log.i("list size", String.valueOf(listFile.size()));
             Uri uriFile = listFile.get(position).getUrlFile();
+            File fileOrigin = new File(String.valueOf(uriFile));
 
-            File fileOrigin = new File(UriUtils.getPathFromUri(getApplicationContext(), uriFile));
-//            long sizeBlock = fileOrigin.length()/100;
             int sizeBlock = 102400;
             AES_BC aes_bc = new AES_BC((int) sizeBlock);
-            Log.i("size block encrypt ", String.valueOf(sizeBlock));
             if (fileOrigin.exists()) {
                 Log.i("uri file :", fileOrigin.getAbsolutePath());
                 String fileNameOrigin = listFile.get(position).getNameFile();
-                String extendtionFile = EncryptFileActivity.getExtensionByStringHandling(fileNameOrigin).get();
                 try {
                     File encrypCBCFile = new File(pathfile + "/folder.intermediate", fileNameOrigin + ".encrypt");
                     File hMacFile = new File(pathfile + "/folder.intermediate", fileNameOrigin + ".hmac");
@@ -224,7 +218,7 @@ public class EncryptFileActivity extends AppCompatActivity {
                         encrypCBCFile.createNewFile();
                     }
                     userLocalStore = new UserLocalStore(getApplicationContext());
-                    String key = userLocalStore.getUser().username+"_KEY";
+                    String key = userLocalStore.getUser().username+fileOrigin.getName()+"_KEY";
                     Log.i("secret key encrypt",key);
                     aes_bc.createKey(key);
                     SecretKey secretKey = aes_bc.getKey(key);
@@ -246,10 +240,10 @@ public class EncryptFileActivity extends AppCompatActivity {
             } else {
                 ErrorUriFile.add(uriFile); // insert uri not exist
             }
-//            boolean stDelete = fileOrigin.delete();
+            boolean stDelete = fileOrigin.delete();
 
             Log.i("size error file", String.valueOf(ErrorUriFile.size()));
-//            Log.e("status delete", String.valueOf(stDelete));
+            Log.e("status delete", String.valueOf(stDelete));
             position = position +1 ;
         }
 
@@ -258,7 +252,7 @@ public class EncryptFileActivity extends AppCompatActivity {
 
     }
 
-    
+
     private void openLoading(){
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -303,23 +297,16 @@ public class EncryptFileActivity extends AppCompatActivity {
                 if (passAuth.isEmpty()) {
                     Toast.makeText(EncryptFileActivity.this, "Nhập mật khẩu", Toast.LENGTH_SHORT).show();
                 } else {
-
                     String passwordEncode = user.getPassword();
                     boolean checkLogin = userLocalStore.checkLoggedIn();
                     if (checkLogin == true && checkPass(passAuth, passwordEncode) == true) {
-                        ProgressBar progressBar = findViewById(R.id.progressBarCircle);
-                        progressBar.setVisibility(View.VISIBLE);
                         //encrypt file
                         Log.i("size list file", String.valueOf(listFile.size()));
-                        ProgressLoadingAsyncTask progressLoadingAsyncTask ;
-                        progressLoadingAsyncTask = new ProgressLoadingAsyncTask(EncryptFileActivity.this,listFile);
-                        progressLoadingAsyncTask.execute();
                         ArrayList<Uri> listFileError =new ArrayList<Uri>();
                         listFileError = encriptFile(listFile); //encrypt file,
                         listFile.clear();
-                         progressBar.setVisibility(View.GONE);
                         if (listFileError.isEmpty()){
-                             Toast.makeText(getApplicationContext(),"Mã hóa thành công",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"Mã hóa thành công",Toast.LENGTH_SHORT).show();
                         }else{
                             for (Uri urlFile : listFileError) {
                                 String nameFile = getFileName(urlFile, getApplicationContext());
@@ -386,7 +373,7 @@ public class EncryptFileActivity extends AppCompatActivity {
                     new ChooserDialog(EncryptFileActivity.this)
                             .withFilter(true, false)
                             .withStartFile(Environment.getExternalStorageDirectory().getPath())
-                            // to handle the result(s)
+
                             .withChosenListener(new ChooserDialog.Result() {
                                 @RequiresApi(api = Build.VERSION_CODES.N)
                                 @Override
@@ -510,8 +497,7 @@ public class EncryptFileActivity extends AppCompatActivity {
         if (listFile.isEmpty()) {
             Toast.makeText(this, "Danh sách mã hóa trống", Toast.LENGTH_SHORT).show();
         } else {
-              openDialogAuthPass();
+            openDialogAuthPass();
         }
     }
 }
-

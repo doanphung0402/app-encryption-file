@@ -64,9 +64,9 @@ public class Utils_BC {
 
     //
     public boolean decrypfileFromFileProtected(File fileProtected, File fileEncrypOrigin,
+
                                                 File fileOutOrigin, String key) throws IOException, NoSuchAlgorithmException, InvalidKeyException, NoSuchProviderException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchPaddingException {
         boolean flag = false;
-
         String nameFile = fileProtected.getName();
         Log.i("name file : ", nameFile);
         FileOutputStream fileEncrypOriginStream = new FileOutputStream(fileEncrypOrigin);
@@ -80,19 +80,8 @@ public class Utils_BC {
         fileProtRandomAcc.seek(88);
         fileProtRandomAcc.read(iv);
         fileProtRandomAcc.seek(104);
-//        fileProtRandomAcc.read(buferBlockSize);
-//        fileProtRandomAcc.seek(120);
-//        int posByte = 0;
-//        for(int k =0 ; k<buferBlockSize.length; k++){
-//             if( buferBlockSize[k] == (byte) 0){
-//                 posByte = k;
-//                 break ;
-//             }
-//        }
-//        byte[] buferBlockSize1 = new byte[posByte];
-//        for (int j =0 ; j <posByte;j++){
-//             buferBlockSize1[j] = buferBlockSize[j];
-//        }
+
+
         int sizeBlock= 102400 ;
 
         byte[] buferFileEncyptOrigin = new byte[sizeBlock];

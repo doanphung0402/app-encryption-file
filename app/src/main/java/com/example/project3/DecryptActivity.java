@@ -113,7 +113,7 @@ public class DecryptActivity extends AppCompatActivity {
              }
              Log.i("file chooser length", String.valueOf(fileChooser.size()));
             for (Uri urlFile : fileChooser) {
-                Log.i("uri file", String.valueOf(urlFile));
+                Log.d("uri file", String.valueOf(urlFile));
                 String nameFile =String.valueOf(urlFile).substring(path.lastIndexOf("/")+1);
                 Uri pathFile = urlFile;
                 String extentionFile = getExtensionByStringHandling(nameFile).get();
@@ -247,7 +247,6 @@ public class DecryptActivity extends AppCompatActivity {
                         Log.i("list file decrypt ", String.valueOf(listFile.size())) ;
                         DecryptFile decrypt = new DecryptFile(listFileDecrypt,getApplicationContext());
                         decrypt.decryptFile();
-                        closeProcessBar();
                         listFileDecrypt.clear();
                         finish();
                         startActivity(getIntent());
@@ -261,9 +260,6 @@ public class DecryptActivity extends AppCompatActivity {
         });
 
     }
-
-
-
 
     private void checkAndRequestPermissions() {
         String[] permissions = new String[]{
