@@ -155,7 +155,6 @@ public class EncryptFileActivity extends AppCompatActivity {
             }
             for (Uri urlFile : fileChooser) {
                 String nameFile = getFileNameByUri(urlFile);
-                Log.i("name file line 158",nameFile);
                 Uri pathFile = urlFile;
                 String extentionFile = getExtensionByStringHandling(nameFile).get();
                 int iconFile = getImageIconFile(extentionFile);
@@ -191,7 +190,6 @@ public class EncryptFileActivity extends AppCompatActivity {
         ArrayList<Uri> ErrorUriFile = new ArrayList<>();
 
         while (position < listFile.size()) {
-            Log.i("list size", String.valueOf(listFile.size()));
             Uri uriFile = listFile.get(position).getUrlFile();
             File fileOrigin = new File(String.valueOf(uriFile));
 
@@ -241,9 +239,6 @@ public class EncryptFileActivity extends AppCompatActivity {
                 ErrorUriFile.add(uriFile); // insert uri not exist
             }
             boolean stDelete = fileOrigin.delete();
-
-            Log.i("size error file", String.valueOf(ErrorUriFile.size()));
-            Log.e("status delete", String.valueOf(stDelete));
             position = position +1 ;
         }
 
@@ -301,7 +296,6 @@ public class EncryptFileActivity extends AppCompatActivity {
                     boolean checkLogin = userLocalStore.checkLoggedIn();
                     if (checkLogin == true && checkPass(passAuth, passwordEncode) == true) {
                         //encrypt file
-                        Log.i("size list file", String.valueOf(listFile.size()));
                         ArrayList<Uri> listFileError =new ArrayList<Uri>();
                         listFileError = encriptFile(listFile); //encrypt file,
                         listFile.clear();

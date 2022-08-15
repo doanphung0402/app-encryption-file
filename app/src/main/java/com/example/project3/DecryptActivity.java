@@ -181,7 +181,6 @@ public class DecryptActivity extends AppCompatActivity {
 
     }
     public void openProcessBar(){
-        Log.i("Progess","In progress");
         ProgressBar circleProcessBar =findViewById(R.id.progressBarCircle1);
         TextView tvProcessBar = findViewById(R.id.textProcessBar1);
         circleProcessBar.setVisibility(View.VISIBLE);
@@ -213,7 +212,7 @@ public class DecryptActivity extends AppCompatActivity {
                 listFileDecrypt.add(listFile.get(Integer.parseInt(position)));
             }
         }
-        Log.i("list file Decrypt", String.valueOf(listFileDecrypt.size()));
+
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.activity_auth_password);
@@ -244,7 +243,6 @@ public class DecryptActivity extends AppCompatActivity {
 
                     if (checkLogin == true && checkPass(passAuth, passwordEncode) == true) {
                         openProcessBar();
-                        Log.i("list file decrypt ", String.valueOf(listFile.size())) ;
                         DecryptFile decrypt = new DecryptFile(listFileDecrypt,getApplicationContext());
                         decrypt.decryptFile();
                         listFileDecrypt.clear();
